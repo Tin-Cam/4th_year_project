@@ -27,14 +27,14 @@ public class BlockchainController {
     public BlockchainController(){
         //blockchain.add(new Block());
         initialiseDevices();
-        runDevices();
+        //runDevices();
     }
     
     
     private void initialiseDevices(){
         deviceList.add(new Device(AverageHash.create()));
         deviceList.add(new Device(PHash.create()));
-        deviceList.add(new Device(ColorMomentHash.create()));
+        //deviceList.add(new Device(ColorMomentHash.create()));
         deviceList.add(new Device(BlockMeanHash.create()));
         deviceList.add(new Device(MarrHildrethHash.create()));
         deviceList.add(new Device(RadialVarianceHash.create()));
@@ -53,7 +53,7 @@ public class BlockchainController {
     
     public void addBlock(Block block){
         for(int i = 0; i < deviceList.size(); i++)
-            deviceList.get(i).blockchain.add(block);
+            deviceList.get(i).addBlock(block);
     }
     
     public void setImage(Mat image){

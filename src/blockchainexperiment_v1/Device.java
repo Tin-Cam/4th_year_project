@@ -27,14 +27,31 @@ public class Device implements Runnable {
     
     @Override
     public void run() {
-        for(int i = 0; i < 10; i++){
-            System.out.println("I am using " + getHashName());
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Device.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        compareImages();
+    }
+    
+    private void compareImages(){
+        //Check to ensure an image has been set
+        if(image == null){
+            System.out.println("No image given (" + getHashName() + ")");
+            return;
         }
+        
+        Mat hashResult = new Mat();
+        hasher.compute(image, hashResult);
+        System.out.println("Using " + getHashName() + "\t\tI believe the hash of the image is " + StringUtil.matToHex(hashResult));
+        
+        //Sets the image to null so that the same image won't accidentally be used twice
+        image = null;
+    }
+    
+    public void addBlock(Block block){
+        blockchain.add(block);
+        verifyBlockchain();
+    }
+    
+    public boolean verifyBlockchain(){
+        return false;
     }
     
     public String getHashName(){

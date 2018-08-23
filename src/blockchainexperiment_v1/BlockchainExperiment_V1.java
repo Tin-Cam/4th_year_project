@@ -11,12 +11,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.opencv.core.Core;
+import org.opencv.core.Mat;
 import org.opencv.img_hash.AverageHash;
 import org.opencv.img_hash.BlockMeanHash;
 import org.opencv.img_hash.ColorMomentHash;
 import org.opencv.img_hash.MarrHildrethHash;
 import org.opencv.img_hash.PHash;
 import org.opencv.img_hash.RadialVarianceHash;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
 
 /**
@@ -43,7 +45,9 @@ public class BlockchainExperiment_V1 extends Application {
     
     public static void main(String[] args) {
         BlockchainController blockchain = new BlockchainController();
-
+        Mat test = Imgcodecs.imread("images/test/cat1.png");
+        
+        blockchain.findSimilarImage(test);
         //launch(args);
         //System.exit(0);
     }
