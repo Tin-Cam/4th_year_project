@@ -31,7 +31,7 @@ public class Block {
     public byte[] hash;         //The hash of this block
     public byte[] previousHash; //The hash of the previous block
     
-    private final String imagePath;        //The image of the block
+    public final String imagePath;        //The image of the block
     public Mat hashAV;      //Average Hash
     public Mat hashPH;      //PHash Hash
     public Mat hashBM;      //Block Mean Hash
@@ -87,7 +87,8 @@ public class Block {
             nonce ++;
             hash = calculateHash();
 	}
-	System.out.println("Block Mined!!! : " + StringUtil.byteToHex(hash));
+	System.out.println("Block Mined!!!");
+        printDetails();
     }
     
     public Image getImage() throws IOException{
@@ -123,18 +124,49 @@ public class Block {
             return hashRV;
         }
              
-        System.out.println("Invalid Hash; Access Denied");
+        System.out.println("Invalid Hash Algorithm; Access Denied");
         return null;    
     }
     
+    //Sets one of the images hashes in the block to the given hash,
+    //depending on which hashing algorithm is given
+    public void setImageHash(ImgHashBase hasher, Mat hash){
+        if(hasher instanceof AverageHash){
+            hashAV = hash;
+        }
+        else if(hasher instanceof PHash){
+            hashPH = hash;
+        }
+        else if(hasher instanceof BlockMeanHash){
+            hashBM = hash;
+        }
+        else if(hasher instanceof ColorMomentHash){
+            hashCM = hash;
+        }
+        else if(hasher instanceof MarrHildrethHash){
+            hashMH = hash;
+        }
+        else if(hasher instanceof RadialVarianceHash){
+            hashRV = hash;
+        }
+        else    
+            System.out.println("Invalid Hash Algorithm; Cannot set Hash");  
+    }
     
-//    public void printDetails(int i){
-//        System.out.println("Block " + i + " -- \n\t"
-//                + "Image: " + imagePath + "\n\t"
-//                + "Image Hash: " + StringUtil.Sha256ToString(imageHash) + "\n\t"
-//                + "Block Hash: " + StringUtil.Sha256ToString(hash) + "\n\t"
-//                + "Previous Hash: " + StringUtil.Sha256ToString(previousHash) + "\n\t"
-//                + "Nonce: " + nonce);
-//    }
+    
+    public void printDetails(){
+        System.out.println("Block Details:"
+                + "\n\tBlock Hash:\t" + StringUtil.byteToHex(hash) 
+                + "\n\tPrevious Hash:\t" + StringUtil.byteToHex(previousHash)
+                + "\n\tImage Path:\t" + imagePath
+                + "\n\tImage Hashes ---"
+                + "\n\t\tAV:\t" + StringUtil.matToHex(hashAV)
+                + "\n\t\tPH:\t" + StringUtil.matToHex(hashPH)
+                + "\n\t\tBM:\t" + StringUtil.matToHex(hashBM)
+                + "\n\t\tCM:\t" + StringUtil.matToHex(hashCM)
+                + "\n\t\tMH:\t" + StringUtil.matToHex(hashMH)
+                + "\n\t\tRV:\t" + StringUtil.matToHex(hashRV)
+        );
+    }
     
 }

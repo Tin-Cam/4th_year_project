@@ -5,6 +5,7 @@
  */
 package blockchainexperiment_v1;
 
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -43,11 +44,11 @@ public class BlockchainExperiment_V1 extends Application {
      */
     static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         BlockchainController blockchain = new BlockchainController();
-        Mat test = Imgcodecs.imread("images/test/cat1.png");
+        //Mat test = Imgcodecs.imread("images/test/cat1.png");
         
-        blockchain.findSimilarImage(test);
+        //blockchain.findSimilarImage(test);
         //launch(args);
         //System.exit(0);
     }

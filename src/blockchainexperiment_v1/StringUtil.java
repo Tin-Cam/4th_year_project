@@ -22,6 +22,10 @@ public class StringUtil {
     
     //Converts a Mat object into its Base64 representation
     public static String matToBase64(Mat input){
+        if(input.type() == 6){
+            System.out.println("Converting colour moment");
+            input.convertTo(input, 0);
+        }
         int length = (int) (input.total() * input.elemSize());
         byte buffer[] = new byte[length];
         input.get(0, 0, buffer);
@@ -32,11 +36,15 @@ public class StringUtil {
     public static String matToHex(Mat input){
         if(input == null) return "";
         
+        if(input.type() == 6)
+            input.convertTo(input, 0);
+        
         int length = (int) (input.total() * input.elemSize());
         byte buffer[] = new byte[length];
         input.get(0, 0, buffer);
         return byteToHex(buffer);
     }
+    
     
     //Converts data stored into bytes into its hex representation
     public static String byteToHex(byte[] input) {
