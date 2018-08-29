@@ -41,10 +41,27 @@ public class Device implements Runnable {
             return;
         }
         
-        Mat hashResult = new Mat();
-        hasher.compute(image, hashResult);
-        System.out.println("Using " + getHashName() + "\t\tI believe the hash of the image is " + StringUtil.matToHex(hashResult));
+        //Calculates the given image's hash
+        Mat imageHash = new Mat();
+        hasher.compute(image, imageHash); 
         
+        //Scans the blockchain for the most similar image
+        //(Basically just a min max search)
+        double bestScore = 999;
+        int mostSimilarIndex = 0;
+        for(int i = 1; i < blockchain.size(); i++){
+            Mat blockHash = new Mat();
+            hasher.compute(blockchain.get(i).getImageMat(), blockHash);
+            
+            double result = hasher.compare(imageHash, blockHash);
+            if(result < bestScore){
+                bestScore = result;
+                mostSimilarIndex = i;
+            }
+        }
+        
+        System.out.println("Using " + getHashName() + ", the most similar image is " 
+                + blockchain.get(mostSimilarIndex).imagePath + " with a score of " + bestScore);
         //Sets the image to null so that the same image won't accidentally be used twice
         image = null;
     }

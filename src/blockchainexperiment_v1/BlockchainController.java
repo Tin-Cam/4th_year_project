@@ -47,9 +47,10 @@ public class BlockchainController {
         
     }
     
-    public void findSimilarImage(Mat image){
+    public void findSimilarImage(Mat image) throws InterruptedException{
         setImage(image);
-        //runDevices();
+        runDevices();
+        System.out.println();
     }
     
     public void setImage(Mat image){
@@ -90,9 +91,17 @@ public class BlockchainController {
         System.out.println("Blockchain is legit? " + verifyBlockchain());
     }
     
-    private void runDevices(){
-        for(int i = 0; i < deviceList.size(); i++)
-            new Thread(deviceList.get(i)).start();
+    private void runDevices() throws InterruptedException{
+        //Starts the devices (Threads)
+        Thread threads[] = new Thread[deviceList.size()];
+        for(int i = 0; i < deviceList.size(); i++){
+            threads[i] = new Thread(deviceList.get(i));
+            threads[i].start();
+        }
+        //Waits for the threads to finish
+        for(int i = 0; i < deviceList.size(); i++){
+            threads[i].join();
+        }
     }
     
     public void addBlock(Block block){

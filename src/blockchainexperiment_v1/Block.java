@@ -21,6 +21,7 @@ import org.opencv.img_hash.ImgHashBase;
 import org.opencv.img_hash.MarrHildrethHash;
 import org.opencv.img_hash.PHash;
 import org.opencv.img_hash.RadialVarianceHash;
+import org.opencv.imgcodecs.Imgcodecs;
 
 /**
  *
@@ -93,6 +94,11 @@ public class Block {
     
     public Image getImage() throws IOException{
         Image output = ImageIO.read(new File(imagePath));
+        return output;
+    }
+    
+    public Mat getImageMat(){
+        Mat output = Imgcodecs.imread(imagePath);
         return output;
     }
     

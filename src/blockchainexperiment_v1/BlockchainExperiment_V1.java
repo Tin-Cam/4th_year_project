@@ -44,13 +44,15 @@ public class BlockchainExperiment_V1 extends Application {
      */
     static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         BlockchainController blockchain = new BlockchainController();
-        //Mat test = Imgcodecs.imread("images/test/cat1.png");
+        Mat test = Imgcodecs.imread("images/test_2/dog2.png");
+        Mat test2 = Imgcodecs.imread("images/test_2/dog2_edit.png");
         
-        //blockchain.findSimilarImage(test);
+        blockchain.findSimilarImage(test);
+        blockchain.findSimilarImage(test2);
         //launch(args);
-        //System.exit(0);
+        System.exit(0);
     }
     
 }
