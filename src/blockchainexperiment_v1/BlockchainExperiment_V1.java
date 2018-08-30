@@ -45,6 +45,8 @@ public class BlockchainExperiment_V1 extends Application {
     static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
     
     public static void main(String[] args) throws IOException, InterruptedException {
+        Logger.initialise();
+        
         BlockchainController blockchain = new BlockchainController();
         Mat test = Imgcodecs.imread("images/test_2/dog2.png");
         Mat test2 = Imgcodecs.imread("images/test_2/dog2_edit.png");
@@ -54,5 +56,4 @@ public class BlockchainExperiment_V1 extends Application {
         //launch(args);
         System.exit(0);
     }
-    
 }

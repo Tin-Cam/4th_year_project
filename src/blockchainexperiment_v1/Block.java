@@ -89,7 +89,7 @@ public class Block {
             hash = calculateHash();
 	}
 	System.out.println("Block Mined!!!");
-        printDetails();
+        //printDetails();
     }
     
     public Image getImage() throws IOException{

@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.opencv.core.Mat;
 import org.opencv.img_hash.ImgHashBase;
+import org.opencv.img_hash.RadialVarianceHash;
 
 /**
  *
@@ -47,14 +48,23 @@ public class Device implements Runnable {
         
         //Scans the blockchain for the most similar image
         //(Basically just a min max search)
-        double bestScore = 999;
+        double bestScore;
+        if(hasher.getClass() != RadialVarianceHash.class) //Checks to see if the device uses radial variance (which works differently)
+            bestScore = 999;
+        else
+            bestScore = 0;
+        
         int mostSimilarIndex = 0;
         for(int i = 1; i < blockchain.size(); i++){
             Mat blockHash = new Mat();
             hasher.compute(blockchain.get(i).getImageMat(), blockHash);
             
             double result = hasher.compare(imageHash, blockHash);
-            if(result < bestScore){
+            if(result < bestScore && hasher.getClass() != RadialVarianceHash.class){
+                bestScore = result;
+                mostSimilarIndex = i;
+            }
+            else if(result > bestScore && hasher.getClass() == RadialVarianceHash.class){
                 bestScore = result;
                 mostSimilarIndex = i;
             }
