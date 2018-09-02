@@ -27,17 +27,32 @@ public class Logger {
     public static void initialise() throws FileNotFoundException, UnsupportedEncodingException, IOException{
         
         testFile = new OutputStreamWriter(new FileOutputStream("experiment_logs/" + getTimeStamp()+ ".txt"), "UTF-8");
-        testFile.write("Experiment ");
+        testFile.write("		|Image Name	|Most Similar	|Best Result	|Average	|PHash		|Block Mean	|Color Moment	|Marr Hildreth	|Radial Variance");
+        newLine();
+        writeBlank();
         testFile.flush();
     }
     
-    public static void writeTest(){
-        
+    public static void writeTest(String image, double av) throws IOException{
+        testFile.write("Test " + testNumber + "\t\t|" + image + "\t|" + image + "\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t");
+        newLine();
+        writeBlank();
+        testNumber++;
+        testFile.flush();
     }
     
     private static String getTimeStamp(){
         SimpleDateFormat format = new SimpleDateFormat("yyMMdd-HHmmss");
         String result = format.format(new Date());
         return result;
+    }
+    
+    private static void writeBlank() throws IOException{
+        testFile.write("________________|_______________|_______________|_______________|_______________|_______________|_______________|_______________|_______________|_______________");
+        newLine();
+    }
+    
+    private static void newLine() throws IOException{
+        testFile.write(System.getProperty("line.separator"));
     }
 }
