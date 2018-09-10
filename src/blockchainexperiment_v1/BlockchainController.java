@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.opencv.core.Mat;
 import org.opencv.img_hash.AverageHash;
 import org.opencv.img_hash.BlockMeanHash;
@@ -47,7 +50,7 @@ public class BlockchainController {
         
     }
     
-    public void findSimilarImage(Mat image) throws InterruptedException{
+    public void findSimilarImage(Mat image) throws InterruptedException, IOException{
         setImage(image);
         runDevices();
         System.out.println();
@@ -91,7 +94,7 @@ public class BlockchainController {
         System.out.println("Blockchain is legit? " + verifyBlockchain());
     }
     
-    private void runDevices() throws InterruptedException{
+    private void runDevices() throws InterruptedException, IOException{
         //Starts the devices (Threads)
         Thread threads[] = new Thread[deviceList.size()];
         for(int i = 0; i < deviceList.size(); i++){
@@ -102,6 +105,51 @@ public class BlockchainController {
         for(int i = 0; i < deviceList.size(); i++){
             threads[i].join();
         }
+        //System.out.println("Best score is " + bestScore());
+        System.out.println("Most Occurring index is " + mostOccurringIndex());
+        Logger.writeTest("Image", getBlock(mostOccurringIndex()).imagePath, 70);
+    }
+    
+    private Block getBlock(int index){
+        return deviceList.get(0).blockchain.get(index);
+    }
+    
+    private int mostOccurringIndex(){       
+        //Creates a map that contains the frequencies of the indexes
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i = 0; i < deviceList.size(); i++){
+            
+            int key = deviceList.get(i).scoreIndex;
+            if(map.containsKey(key)){
+                int frequency = map.get(key);
+                map.put(key, frequency++);
+            }
+            else
+                map.put(deviceList.get(i).scoreIndex, 1);
+        }
+        
+        //Finds the most occuring index
+        int max = 0;
+        int result = 0;
+        for(Entry<Integer, Integer> i : map.entrySet()){
+            if (max < i.getValue())
+            {
+                result = i.getKey();
+                max = i.getValue();
+            }
+        }
+            
+        return result;
+    }
+    
+    private double bestScore(){
+        double result = 1000.0;
+        
+        for(int i = 0; i < deviceList.size(); i++)
+            if(deviceList.get(i).score < result)
+                result = deviceList.get(i).score;
+        
+        return result;
     }
     
     public void addBlock(Block block){

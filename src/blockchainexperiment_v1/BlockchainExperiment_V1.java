@@ -46,19 +46,17 @@ public class BlockchainExperiment_V1 extends Application {
     
     public static void main(String[] args) throws IOException, InterruptedException {
         Logger.initialise();
-        Logger.writeTest("mad lad", 69);
-        Logger.writeTest("mad lad", 69);
-        Logger.writeTest("mad lad", 69);
-        Logger.writeTest("mad lad", 69);
-        Logger.writeTest("mad lad", 69);
-        Logger.writeTest("mad lad", 69);
         
         BlockchainController blockchain = new BlockchainController();
         Mat test = Imgcodecs.imread("images/test_2/dog2.png");
         Mat test2 = Imgcodecs.imread("images/test_2/dog2_edit.png");
+        Mat test3 = Imgcodecs.imread("images/test_2/cat2.png");
+        Mat test4 = Imgcodecs.imread("images/test_2/dog2_crop.png");
         
         blockchain.findSimilarImage(test);
         blockchain.findSimilarImage(test2);
+        blockchain.findSimilarImage(test3);
+        blockchain.findSimilarImage(test4);
         //launch(args);
         System.exit(0);
     }

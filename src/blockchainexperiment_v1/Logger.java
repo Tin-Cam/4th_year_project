@@ -33,8 +33,8 @@ public class Logger {
         testFile.flush();
     }
     
-    public static void writeTest(String image, double av) throws IOException{
-        testFile.write("Test " + testNumber + "\t\t|" + image + "\t|" + image + "\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t");
+    public static void writeTest(String image, String mostSimilar, double av) throws IOException{
+        testFile.write("Test " + testNumber + "\t\t|" + image + "\t|" + mostSimilar + "\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t");
         newLine();
         writeBlank();
         testNumber++;

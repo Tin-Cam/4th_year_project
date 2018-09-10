@@ -10,7 +10,12 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.opencv.core.Mat;
+import org.opencv.img_hash.AverageHash;
+import org.opencv.img_hash.BlockMeanHash;
+import org.opencv.img_hash.ColorMomentHash;
 import org.opencv.img_hash.ImgHashBase;
+import org.opencv.img_hash.MarrHildrethHash;
+import org.opencv.img_hash.PHash;
 import org.opencv.img_hash.RadialVarianceHash;
 
 /**
@@ -25,6 +30,9 @@ public class Device implements Runnable {
     public ArrayList<Block> blockchain = new ArrayList<>(); //The Blockchain
     private int difficulty;
     
+    public double score = 999;
+    public int scoreIndex = 0;
+    
     public Device (ImgHashBase hasher, int difficulty){
         this.hasher = hasher;
         this.difficulty = difficulty;
@@ -36,6 +44,7 @@ public class Device implements Runnable {
     }
     
     private void compareImages(){
+        
         //Check to ensure an image has been set
         if(image == null){
             System.out.println("No image given (" + getHashName() + ")");
@@ -69,9 +78,9 @@ public class Device implements Runnable {
                 mostSimilarIndex = i;
             }
         }
-        
+        setScore(bestScore, mostSimilarIndex);
         System.out.println("Using " + getHashName() + ", the most similar image is " 
-                + blockchain.get(mostSimilarIndex).imagePath + " with a score of " + bestScore);
+                + scoreIndex + " with a score of " + score + " (" + bestScore + ")");
         //Sets the image to null so that the same image won't accidentally be used twice
         image = null;
     }
@@ -94,6 +103,38 @@ public class Device implements Runnable {
         Mat hash = new Mat();
         hasher.compute(image, hash);
         return hash;
+    }
+    
+    //Normailises the value given (determined by which hash algorithm is used) and sets it as the score
+    private void setScore(double value, int index){
+        scoreIndex = index;
+        double result;
+        
+        //Checks to see if the device is using radial variance, which requires a different calculation
+        if(hasher.getClass() == AverageHash.class) //Average Hash
+            result = normalise(value, 0, 256);
+        else if(hasher.getClass() == PHash.class) //PHash
+            result = normalise(value, 0, 256);
+        else if(hasher.getClass() == BlockMeanHash.class) //Block Mean Hash
+            result = normalise(value, 0, 1024);
+        else if(hasher.getClass() == ColorMomentHash.class) //Color Moment Hash
+            result = value;
+        else if(hasher.getClass() == MarrHildrethHash.class) //Marr Hildreth Hash
+            result = normalise(value, 0, 2304);
+        else if(hasher.getClass() == RadialVarianceHash.class) //Radial Variance
+            result = value;
+        else
+            result = value;
+        
+        score = result;       
+    }
+    
+    private double normalise(double value, double min, double max){
+        double result;
+        
+        result = (value - min) / (max - min);
+        
+        return result;
     }
     
     public boolean verifyBlockchain(){
