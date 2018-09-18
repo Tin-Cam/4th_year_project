@@ -86,6 +86,7 @@ public class Device implements Runnable {
     }
     
     public void addBlock(Block block){
+        block.mineBlock(difficulty);
         blockchain.add(block);
         verifyBlockchain();
     }
@@ -112,17 +113,17 @@ public class Device implements Runnable {
         
         //Checks to see if the device is using radial variance, which requires a different calculation
         if(hasher.getClass() == AverageHash.class) //Average Hash
-            result = normalise(value, 0, 256);
+            result = normalise(value, 0, 64);
         else if(hasher.getClass() == PHash.class) //PHash
-            result = normalise(value, 0, 256);
+            result = normalise(value, 0, 64);
         else if(hasher.getClass() == BlockMeanHash.class) //Block Mean Hash
-            result = normalise(value, 0, 1024);
+            result = normalise(value, 0, 256);
         else if(hasher.getClass() == ColorMomentHash.class) //Color Moment Hash
             result = value;
         else if(hasher.getClass() == MarrHildrethHash.class) //Marr Hildreth Hash
-            result = normalise(value, 0, 2304);
+            result = normalise(value, 0, 576);
         else if(hasher.getClass() == RadialVarianceHash.class) //Radial Variance
-            result = value;
+            result = 1 - value;
         else
             result = value;
         

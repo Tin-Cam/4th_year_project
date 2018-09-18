@@ -30,7 +30,7 @@ public class BlockchainController {
     public ArrayList<Device> deviceList = new ArrayList<>();
     private final int difficulty = 4;
     
-    private final String imageDirectory = "images/test"; //The directory of the images used in the blockcahin
+    private final String imageDirectory = "images/experiment"; //The directory of the images used in the blockcahin
     
     //Constructor and initialliser for the controller
     public BlockchainController() throws IOException{
@@ -44,15 +44,15 @@ public class BlockchainController {
         deviceList.add(new Device(AverageHash.create(), difficulty));
         deviceList.add(new Device(PHash.create(), difficulty));      
         deviceList.add(new Device(BlockMeanHash.create(), difficulty));
-        deviceList.add(new Device(ColorMomentHash.create(), difficulty));
+        //deviceList.add(new Device(ColorMomentHash.create(), difficulty));
         deviceList.add(new Device(MarrHildrethHash.create(), difficulty));
         deviceList.add(new Device(RadialVarianceHash.create(), difficulty));
         
     }
     
-    public void findSimilarImage(Mat image) throws InterruptedException, IOException{
+    public void findSimilarImage(Mat image, String testName) throws InterruptedException, IOException{
         setImage(image);
-        runDevices();
+        runDevices(testName);
         System.out.println();
     }
     
@@ -84,17 +84,13 @@ public class BlockchainController {
                 block.setImageHash(deviceList.get(j).hasher, hash);
             }
             
-            
-            //IMPORTANT!!!!
-            //FINAL PROJECT MUST MINE BLOCKS IN DEVICES
-            block.mineBlock(difficulty);
             addBlock(block);
         }
         System.out.println("Blockchain has been built!");
         System.out.println("Blockchain is legit? " + verifyBlockchain());
     }
     
-    private void runDevices() throws InterruptedException, IOException{
+    private void runDevices(String testName) throws InterruptedException, IOException{
         //Starts the devices (Threads)
         Thread threads[] = new Thread[deviceList.size()];
         for(int i = 0; i < deviceList.size(); i++){
@@ -107,7 +103,10 @@ public class BlockchainController {
         }
         //System.out.println("Best score is " + bestScore());
         System.out.println("Most Occurring index is " + mostOccurringIndex());
-        Logger.writeTest("Image", getBlock(mostOccurringIndex()).imagePath, 70);
+        System.out.println("The best score is " + bestScore().score + " using " + bestScore().getHashName());
+        
+        Device device = bestScore();
+        Logger.writeTest(testName, device.score, device.getHashName(), getBlock(device.scoreIndex).imagePath);
     }
     
     private Block getBlock(int index){
@@ -142,12 +141,15 @@ public class BlockchainController {
         return result;
     }
     
-    private double bestScore(){
-        double result = 1000.0;
+    private Device bestScore(){
+        double bestScore = 1000.0;
+        Device result = null;
         
         for(int i = 0; i < deviceList.size(); i++)
-            if(deviceList.get(i).score < result)
-                result = deviceList.get(i).score;
+            if(deviceList.get(i).score < bestScore){
+                bestScore = deviceList.get(i).score;
+                result = deviceList.get(i);
+            }
         
         return result;
     }

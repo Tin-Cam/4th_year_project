@@ -20,26 +20,32 @@ import java.util.Date;
  */
 public class Logger {
     
-    public static String testName = "";
+    public static String imageName = "";
     public static int testNumber = 1;
     private static OutputStreamWriter testFile;
     
-    public static void initialise() throws FileNotFoundException, UnsupportedEncodingException, IOException{
+    public static void initialise(String image) throws FileNotFoundException, UnsupportedEncodingException, IOException{
+        imageName = image;
         
         testFile = new OutputStreamWriter(new FileOutputStream("experiment_logs/" + getTimeStamp()+ ".txt"), "UTF-8");
-        testFile.write("		|Image Name	|Most Similar	|Best Result	|Average	|PHash		|Block Mean	|Color Moment	|Marr Hildreth	|Radial Variance");
+        testFile.write("Image: " + imageName);
         newLine();
         writeBlank();
         testFile.flush();
     }
     
-    public static void writeTest(String image, String mostSimilar, double av) throws IOException{
-        testFile.write("Test " + testNumber + "\t\t|" + image + "\t|" + mostSimilar + "\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t|" + av + "\t\t");
+    public static void writeTest(String image, double score, String algorithm, String result) throws IOException{
+        testFile.write(image + ":");
         newLine();
+        testFile.write("\tBest Score: " + score + " using " + algorithm);
+        newLine();
+        testFile.write("\tImage Found: " + result);
+        newLine();
+         
         writeBlank();
-        testNumber++;
         testFile.flush();
     }
+    
     
     private static String getTimeStamp(){
         SimpleDateFormat format = new SimpleDateFormat("yyMMdd-HHmmss");
@@ -48,7 +54,7 @@ public class Logger {
     }
     
     private static void writeBlank() throws IOException{
-        testFile.write("________________|_______________|_______________|_______________|_______________|_______________|_______________|_______________|_______________|_______________");
+        testFile.write("---------------------------------------------------");
         newLine();
     }
     
